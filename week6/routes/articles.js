@@ -8,12 +8,14 @@ var Article = require('../models/article');
 /* GET articles page. */
 router.get('/', function(req, res, next) {
   
+  // use the Article model to query the Articles collection
   Article.find(function(err, articles) {
     if  (err) {
       console.log(err);
       res.end(err);
     }
     else {
+      // no error, we found a list of articles
       res.render('articles/index', {
         title: 'Articles',
         articles: articles
@@ -30,13 +32,14 @@ router.get ('/add', function(req, res, next) {
     
   });
 
+// POST add page - save the new article
 router.post ('/add', function(req, res, next) {
   
   Article.create( {
     title: req.body.title,
     content: req.body.content
   },  function(err, Article) {
-    
+    // did we get back an error or valid Article object??
     if (err) {
       console.log(err);
       res.end(err);
@@ -48,7 +51,7 @@ router.post ('/add', function(req, res, next) {
   
 });
 
-//get edit page
+// GET edit page - show the current article in the form
 router.get ('/:id', function(req, res, next) {
   
   var id = req.params.id;
@@ -61,20 +64,22 @@ router.get ('/:id', function(req, res, next) {
     else{
       //show the edit view
       res.render('articles/edit', {
-      title: 'Article Details',
-      article: Article
+        title: 'Article Details',
+        article: Article
       });
       
     }
   });
 });
 
-router.post ('/id:', function(req, res, next) {
+// POST edit page - update the selected article
+router.post ('/:id', function(req, res, next) {
   
   //grab the id from the url parameter
   var id = req.params.id;
   
-  var article = new Articles( {
+  // create and populate an article object
+  var article = new Article( {
     _id: id,
     title: req.body.title,
     content: req.body.content
@@ -111,4 +116,5 @@ router.get ('/delete/:id', function(req, res, next) {
   });
 });
 
+// make this public
 module.exports = router;
